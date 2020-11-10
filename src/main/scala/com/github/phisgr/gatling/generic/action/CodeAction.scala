@@ -1,6 +1,7 @@
 package com.github.phisgr.gatling.generic.action
 
 import com.github.phisgr.gatling.generic.check.CodeCheck
+import com.github.phisgr.gatling.generic.util.EventLoopHelper
 import io.gatling.commons.stats.{KO, OK}
 import io.gatling.commons.util.Clock
 import io.gatling.commons.util.StringHelper.Eol
@@ -31,7 +32,7 @@ class CodeAction[T](
 
     f(session, { res =>
       val endTimestamp = clock.nowMillis
-      session.eventLoop.execute { () =>
+      session.eventLoop.checkAndExecute { () =>
         val (checkSaveUpdated, checkError) = Check.check(res, session, checks, preparedCache = null)
 
         val status = if (checkError.isEmpty) OK else KO

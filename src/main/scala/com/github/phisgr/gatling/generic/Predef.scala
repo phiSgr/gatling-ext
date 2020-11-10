@@ -31,7 +31,7 @@ object Predef extends CodeCheckSupport with StrictLogging {
   def callbackAction[T](requestName: Expression[String])(f: (Session, Try[T] => Unit) => Unit): CodeActionBuilder[T] =
     CodeActionBuilder(requestName, f)
 
-  def futureAction[T: NotValidation](requestName: Expression[String])(f: Session => Future[T]): CodeActionBuilder[T] =
+  def futureAction[T](requestName: Expression[String])(f: Session => Future[T]): CodeActionBuilder[T] =
     callbackAction[T](requestName) { (session, callback) =>
       // This is fine because callback does the dispatch anyway
       f(session).onComplete(callback)(direct)

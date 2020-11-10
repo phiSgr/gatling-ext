@@ -13,7 +13,7 @@ val publishSettings = {
     publishMavenStyle := true,
 
     licenses := Seq("APL2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
-    sonatypeProjectHosting := Some(GitHubHosting("phiSgr", "gatling-generic", "phisgr@gmail.com")),
+    sonatypeProjectHosting := Some(GitHubHosting("phiSgr", "gatling-ext", "phisgr@gmail.com")),
   )
 }
 
@@ -24,7 +24,7 @@ lazy val root = (project in file("."))
   .settings(publishSettings: _*)
   .settings(
     name := "gatling-ext",
-    version := "0.0.1",
+    version := "0.1.0",
     scalacOptions ++= Seq(
       "-language:existentials",
       "-language:implicitConversions",
