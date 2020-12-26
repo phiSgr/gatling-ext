@@ -2,12 +2,22 @@ package com.github.phisgr.gatling.generic.action
 
 import com.github.phisgr.gatling.generic.SessionCombiner
 import com.typesafe.scalalogging.Logger
-import io.gatling.commons.validation.Success
+import io.gatling.commons.validation.{Failure, Success, Validation}
 import io.gatling.core.action.builder.ActionBuilder
 import io.gatling.core.action.{Action, ChainableAction}
 import io.gatling.core.session.{Expression, Session}
 import io.gatling.core.structure.ScenarioContext
 import io.gatling.core.util.NameGen
+
+private object AttributeNameHelper {
+  def requireSuccess(validation: Validation[String], logger: Logger): String = validation match {
+    case Success(name) => name
+    case Failure(message) =>
+      val errorMessage = s"Failed to extract sessionAttributeName: $message"
+      logger.error(errorMessage)
+      throw new IllegalStateException(message)
+  }
+}
 
 class AsyncActionBuilder(
   attributeNameExpression: Expression[String],
@@ -22,7 +32,7 @@ class AsyncActionBuilder(
 class FutureFillingAction(attributeNameExpression: Expression[String]) extends Action with NameGen {
   override val name: String = genName("futureFilling")
   override protected def execute(session: Session): Unit = {
-    val Success(sessionAttributeName) = attributeNameExpression(session)
+    val sessionAttributeName = AttributeNameHelper.requireSuccess(attributeNameExpression(session), logger)
     val future = session(sessionAttributeName).as[SessionHolder]
 
     future.asyncCompleted(session.remove(sessionAttributeName), logger = logger)
@@ -36,7 +46,7 @@ class AsyncAction(
 ) extends ChainableAction with NameGen {
   override val name: String = genName("async")
   override protected def execute(session: Session): Unit = {
-    val Success(sessionAttributeName) = attributeNameExpression(session)
+    val sessionAttributeName = AttributeNameHelper.requireSuccess(attributeNameExpression(session), logger)
     val withFuture = session.set(sessionAttributeName, new SessionHolder)
     try {
       innerAction ! withFuture.copy(
@@ -63,7 +73,7 @@ class AwaitAction(
   override val name: String = genName("await")
 
   override protected def execute(session: Session): Unit = {
-    val Success(sessionAttributeName) = attributeNameExpression(session)
+    val sessionAttributeName = AttributeNameHelper.requireSuccess(attributeNameExpression(session), logger)
     val future = session(sessionAttributeName).as[SessionHolder]
 
     future.await(
