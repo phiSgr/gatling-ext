@@ -4,7 +4,7 @@ import com.github.phisgr.gatling.generic.check.{CodeCheck, ResponseExtract}
 import io.gatling.commons.validation.Validation
 import io.gatling.core.action.Action
 import io.gatling.core.action.builder.ActionBuilder
-import io.gatling.core.check.{FindCheckBuilder, MultipleFindCheckBuilder}
+import io.gatling.core.check.CheckBuilder
 import io.gatling.core.session.{Expression, Session}
 import io.gatling.core.structure.ScenarioContext
 
@@ -31,7 +31,7 @@ case class CodeActionBuilder[T](
 
   def check[X](
     extract: Try[T] => Validation[Option[X]])(
-    checks: (FindCheckBuilder[ResponseExtract, Try[T], X] => CodeCheck[T])*
+    checks: (CheckBuilder.Find[ResponseExtract, Try[T], X] => CodeCheck[T])*
   ): CodeActionBuilder[T] = {
     val checkBuilder = ResponseExtract.extract(extract)
     copy(checks = this.checks ::: checks.map(_.apply(checkBuilder)).toList)
@@ -39,7 +39,7 @@ case class CodeActionBuilder[T](
 
   def checkSeq[X](
     extract: Try[T] => Validation[Option[Seq[X]]])(
-    checks: (MultipleFindCheckBuilder[ResponseExtract, Try[T], X] => CodeCheck[T])*
+    checks: (CheckBuilder.MultipleFind[ResponseExtract, Try[T], X] => CodeCheck[T])*
   ): CodeActionBuilder[T] = {
     val checkBuilder = ResponseExtract.extractMultiple(extract)
     copy(checks = this.checks ::: checks.map(_.apply(checkBuilder)).toList)

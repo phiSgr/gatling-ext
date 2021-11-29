@@ -27,7 +27,7 @@ class CodeAction[T](
 
   override val name: String = genName("code")
 
-  override def sendRequest(requestName: String, session: Session): Validation[Unit] = {
+  override def sendRequest(session: Session): Validation[Unit] = {
     val startTimestamp = clock.nowMillis
 
     f(session, { res =>
@@ -40,16 +40,19 @@ class CodeAction[T](
 
         val newSession = if (isSilent) checkSaveUpdated else {
           val withStatus = if (status == KO) checkSaveUpdated.markAsFailed else checkSaveUpdated
-          statsEngine.logResponse(
-            withStatus.scenario,
-            withStatus.groups,
-            requestName,
-            startTimestamp = startTimestamp,
-            endTimestamp = endTimestamp,
-            status = status,
-            responseCode = None,
-            message = errorMessage
-          )
+
+          requestName(session).foreach {
+            statsEngine.logResponse(
+              withStatus.scenario,
+              withStatus.groups,
+              _,
+              startTimestamp = startTimestamp,
+              endTimestamp = endTimestamp,
+              status = status,
+              responseCode = None,
+              message = errorMessage
+            )
+          }
           withStatus.logGroupRequestTimings(startTimestamp = startTimestamp, endTimestamp = endTimestamp)
         }
 

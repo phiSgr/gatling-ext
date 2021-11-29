@@ -1,10 +1,10 @@
 val commonSettings = Seq(
   organization := "com.github.phisgr",
-  scalaVersion := "2.13.4",
+  scalaVersion := "2.13.7",
   crossPaths := false,
 )
 
-val gatlingVersion = "3.5.0"
+val gatlingVersion = "3.7.2"
 val gatlingCore = "io.gatling" % "gatling-core" % gatlingVersion
 
 val publishSettings = {
@@ -13,7 +13,7 @@ val publishSettings = {
     publishTo := SonatypeKeys.sonatypePublishTo.value,
     publishMavenStyle := true,
 
-    licenses := Seq("APL2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
+    licenses := Seq("APL2" -> url("https://www.apache.org/licenses/LICENSE-2.0.txt")),
     sonatypeProjectHosting := Some(GitHubHosting("phiSgr", "gatling-ext", "phisgr@gmail.com")),
   )
 }

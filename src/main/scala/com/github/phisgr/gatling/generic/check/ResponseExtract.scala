@@ -19,7 +19,7 @@ private[gatling] object ResponseExtract {
   def extract[T, X](
     f: T => Validation[Option[X]],
     name: String = "response"
-  ): FindCheckBuilder[ResponseExtract, T, X] = new DefaultFindCheckBuilder(
+  ): CheckBuilder.Find[ResponseExtract, T, X] = new CheckBuilder.Find.Default(
     displayActualValue = true,
     extractor = new SingleExtractor[T, X](f, name).expressionSuccess
   )
@@ -27,7 +27,7 @@ private[gatling] object ResponseExtract {
   def extractMultiple[T, X](
     f: T => Validation[Option[Seq[X]]],
     name: String = "response"
-  ): DefaultMultipleFindCheckBuilder[ResponseExtract, T, X] = new DefaultMultipleFindCheckBuilder[ResponseExtract, T, X](
+  ): CheckBuilder.MultipleFind.Default[ResponseExtract, T, X] = new CheckBuilder.MultipleFind.Default[ResponseExtract, T, X](
     displayActualValue = true
   ) {
     override def findExtractor(occurrence: Int): Expression[ResponseExtractor[T, X]] =
