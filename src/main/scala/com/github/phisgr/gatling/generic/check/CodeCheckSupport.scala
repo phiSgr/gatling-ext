@@ -2,7 +2,8 @@ package com.github.phisgr.gatling.generic.check
 
 import io.gatling.commons.util.Throwables.PimpedException
 import io.gatling.commons.validation.{FailureWrapper, SuccessWrapper, Validation}
-import io.gatling.core.check.{CheckBuilder, FindCheckBuilder, ValidatorCheckBuilder}
+import io.gatling.core.check.CheckBuilder
+import io.gatling.core.check.CheckBuilder.{Find, Validate}
 
 import scala.util.{Failure, Success, Try}
 
@@ -20,18 +21,18 @@ trait CodeCheckSupport {
   def returnValue[T]: Try[T] => Validation[Option[T]] =
     ReturnValue.asInstanceOf[Try[T] => Validation[Option[T]]]
 
-  implicit def checkBuilder2CodeCheck[T, X](
-    checkBuilder: CheckBuilder[ResponseExtract, Try[T], X]
+  implicit def checkBuilder2CodeCheck[T](
+    checkBuilder: CheckBuilder[ResponseExtract, Try[T]]
   ): CodeCheck[T] =
     checkBuilder.build(CodeCheck.materializer)
 
   implicit def validatorCheckBuilder2CodeCheck[T, X](
-    validatorCheckBuilder: ValidatorCheckBuilder[ResponseExtract, Try[T], X])
+    validatorCheckBuilder: Validate[ResponseExtract, Try[T], X])
   : CodeCheck[T] =
     validatorCheckBuilder.exists
 
   implicit def findCheckBuilder2CodeCheck[T, X](
-    findCheckBuilder: FindCheckBuilder[ResponseExtract, Try[T], X]
+    findCheckBuilder: Find[ResponseExtract, Try[T], X]
   ): CodeCheck[T] =
     findCheckBuilder.find.exists
 }

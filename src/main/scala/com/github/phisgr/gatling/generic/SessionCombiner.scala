@@ -13,7 +13,7 @@ trait SessionCombiner {
    */
   def reconcile(main: Session, branched: Session): Session
 
-  def combineSafely(main: Session, branched: Session, logger: Logger): Session = try {
+  final def combineSafely(main: Session, branched: Session, logger: Logger): Session = try {
     reconcile(main = main, branched = branched)
   } catch {
     case NonFatal(e) =>

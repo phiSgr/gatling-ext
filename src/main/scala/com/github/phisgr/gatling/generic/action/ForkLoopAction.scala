@@ -57,7 +57,7 @@ class Looper(
           loopBranch = loopBranch.markAsFailed
       }
     } else {
-      logger.info(s"Looper $looperName for UserId #${session.userId} stopped running.")
+      logger.debug(s"Looper $looperName for UserId #${session.userId} stopped running.")
     }
   }
 }
@@ -77,7 +77,7 @@ class ForkStopAction(
 
   override def requestName: Expression[String] = s"Stop $looperName".expressionSuccess
 
-  override def sendRequest(requestName: String, session: Session): Validation[Unit] = {
+  override def sendRequest(session: Session): Validation[Unit] = {
     session(looperName).validate[Looper].map { looper =>
       looper.stop(session, sessionCombiner, next)
     }

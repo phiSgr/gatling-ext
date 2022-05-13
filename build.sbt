@@ -1,10 +1,10 @@
 val commonSettings = Seq(
   organization := "com.github.phisgr",
-  scalaVersion := "2.13.4",
+  scalaVersion := "2.13.8",
   crossPaths := false,
 )
 
-val gatlingVersion = "3.5.0"
+val gatlingVersion = "3.7.6"
 val gatlingCore = "io.gatling" % "gatling-core" % gatlingVersion
 
 val publishSettings = {
@@ -25,7 +25,7 @@ lazy val root = (project in file("."))
   .settings(publishSettings: _*)
   .settings(
     name := "gatling-ext",
-    version := "0.2.0",
+    version := "0.3.0",
     scalacOptions ++= Seq(
       "-language:existentials",
       "-language:implicitConversions",

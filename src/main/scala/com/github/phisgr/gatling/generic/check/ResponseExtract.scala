@@ -2,6 +2,7 @@ package com.github.phisgr.gatling.generic.check
 
 import io.gatling.commons.validation.{Validation, safely}
 import io.gatling.core.check._
+import io.gatling.core.check.CheckBuilder.{Find, MultipleFind}
 import io.gatling.core.session.{Expression, ExpressionSuccessWrapper}
 
 private[gatling] object ResponseExtract {
@@ -19,7 +20,7 @@ private[gatling] object ResponseExtract {
   def extract[T, X](
     f: T => Validation[Option[X]],
     name: String = "response"
-  ): FindCheckBuilder[ResponseExtract, T, X] = new DefaultFindCheckBuilder(
+  ): Find[ResponseExtract, T, X] = new Find.Default(
     displayActualValue = true,
     extractor = new SingleExtractor[T, X](f, name).expressionSuccess
   )
@@ -27,7 +28,7 @@ private[gatling] object ResponseExtract {
   def extractMultiple[T, X](
     f: T => Validation[Option[Seq[X]]],
     name: String = "response"
-  ): DefaultMultipleFindCheckBuilder[ResponseExtract, T, X] = new DefaultMultipleFindCheckBuilder[ResponseExtract, T, X](
+  ): MultipleFind.Default[ResponseExtract, T, X] = new MultipleFind.Default[ResponseExtract, T, X](
     displayActualValue = true
   ) {
     override def findExtractor(occurrence: Int): Expression[ResponseExtractor[T, X]] =

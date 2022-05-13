@@ -16,12 +16,12 @@ class GenericExample extends Simulation {
   val s = scenario("Generic")
     .exec(_.set("start", System.currentTimeMillis()))
     .repeat(10, counterName = "i") {
-      async("sleeper${i}")(blockingAction("Sleep") { _ =>
+      async("sleeper#{i}")(blockingAction("Sleep") { _ =>
         Thread.sleep(1000)
       })
     }
     .repeat(10, counterName = "i") {
-      await("sleeper${i}")(SessionCombiner.NoOp)
+      await("sleeper#{i}")(SessionCombiner.NoOp)
     }
     .exec { session =>
       val now = System.currentTimeMillis()
@@ -57,7 +57,11 @@ class GenericExample extends Simulation {
     .exec(
       callbackAction[String]("Expected Failure, Succeeded") { (_, callback) =>
         callback(Success("silent"))
-      }.silent.check(errorMessage)(_.notExists)
+      }.silent.check(errorMessage)(
+        _.notExists
+          // only 1 such error in the logs
+          .checkIf(_.userId == 1)
+      )
     )
     .exec(
       futureAction("Check") { _ => Future(List(1, 2, 3)) }
@@ -68,6 +72,13 @@ class GenericExample extends Simulation {
           _.count is 3,
           _.findAll is List(1, 2, 3)
         )
+    )
+    .exec(
+      blockingAction("CheckIf") { session =>
+        if (session.userId < 2) throw new RuntimeException("error message goes here")
+      }.check(errorMessage)(
+        _.notExists.checkIf { (result, _) => result.isFailure }
+      )
     )
 
   setUp(

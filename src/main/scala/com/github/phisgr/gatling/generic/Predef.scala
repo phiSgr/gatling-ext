@@ -1,7 +1,6 @@
 package com.github.phisgr.gatling.generic
 
-import java.util.concurrent.Executors
-
+import java.util.concurrent.{Executor, Executors}
 import com.github.phisgr.gatling.generic.action._
 import com.github.phisgr.gatling.generic.check.CodeCheckSupport
 import com.typesafe.scalalogging.StrictLogging
@@ -17,7 +16,14 @@ import scala.util.Try
 
 object Predef extends CodeCheckSupport with StrictLogging {
 
-  private lazy val blockingEc: ExecutionContext = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
+  private lazy val blockingEc: ExecutionContext = ExecutionContext.fromExecutor(try {
+    // Just in case you use loom
+    classOf[Executors].getDeclaredMethod("newVirtualThreadPerTaskExecutor").invoke(null).asInstanceOf[Executor]
+  } catch {
+    case e: Throwable =>
+      logger.debug("Virtual threads not available, will use newCachedThreadPool.", e)
+      Executors.newCachedThreadPool()
+  })
 
   object direct extends ExecutionContext {
     def execute(runnable: Runnable): Unit = runnable.run()
@@ -56,13 +62,11 @@ object Predef extends CodeCheckSupport with StrictLogging {
       builder.exec(new AwaitActionBuilder(sessionAttributeName, sessionCombiner))
   }
 
-  private def emptyChain: ChainBuilder = io.gatling.core.Predef.exec(Nil)
-
   def async(sessionAttributeName: Expression[String])(actionBuilder: ActionBuilder): ChainBuilder =
-    emptyChain.async(sessionAttributeName)(actionBuilder)
+    ChainBuilder.Empty.async(sessionAttributeName)(actionBuilder)
 
   def await(sessionAttributeName: Expression[String])(sessionCombiner: SessionCombiner): ChainBuilder =
-    emptyChain.await(sessionAttributeName)(sessionCombiner)
+    ChainBuilder.Empty.await(sessionAttributeName)(sessionCombiner)
 
 
   // Polling
