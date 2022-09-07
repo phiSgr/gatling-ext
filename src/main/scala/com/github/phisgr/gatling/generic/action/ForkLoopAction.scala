@@ -1,7 +1,5 @@
 package com.github.phisgr.gatling.generic.action
 
-import java.util.concurrent.TimeUnit
-
 import com.github.phisgr.gatling.generic.SessionCombiner
 import com.typesafe.scalalogging.StrictLogging
 import io.gatling.commons.util.Clock
@@ -13,6 +11,7 @@ import io.gatling.core.stats.StatsEngine
 import io.gatling.core.structure.{ChainBuilder, ScenarioContext}
 import io.gatling.core.util.NameGen
 
+import java.util.concurrent.TimeUnit
 import scala.concurrent.duration.FiniteDuration
 
 class Looper(

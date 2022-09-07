@@ -1,8 +1,8 @@
 package com.github.phisgr.gatling.generic.check
 
 import io.gatling.commons.validation.{Validation, safely}
-import io.gatling.core.check._
 import io.gatling.core.check.CheckBuilder.{Find, MultipleFind}
+import io.gatling.core.check._
 import io.gatling.core.session.{Expression, ExpressionSuccessWrapper}
 
 private[gatling] object ResponseExtract {
