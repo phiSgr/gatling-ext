@@ -5,7 +5,9 @@ plugins {
     id("org.jetbrains.dokka") version "1.7.10"
 
     id("io.gatling.gradle") version "3.8.3.2"
+
     id("maven-publish")
+    id("signing")
 }
 
 repositories {
@@ -39,6 +41,16 @@ val javadocJar = tasks.named<Jar>("javadocJar") {
 }
 
 publishing {
+    repositories {
+        maven {
+            name = "sonatype"
+            setUrl("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+            credentials {
+                username = properties["ossrhUsername"] as String?
+                password = properties["ossrhPassword"] as String?
+            }
+        }
+    }
     publications {
         create<MavenPublication>("maven") {
             groupId = "com.github.phisgr"
@@ -46,6 +58,33 @@ publishing {
             version = "0.4.0"
 
             from(components["java"])
+
+            pom {
+                name.set("gatling-kt-ext")
+                description.set("Unholy Kotlin extensions to the Gatling Java API")
+                url.set("https://github.com/phiSgr/gatling-ext/gatling-kt-ext")
+
+                licenses {
+                    license {
+                        name.set("APL2")
+                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("phiSgr")
+                        name.set("George Leung")
+                        email.set("phisgr@gmail.com")
+                    }
+                }
+                scm {
+                    url.set("https://github.com/phiSgr/gatling-ext/gatling-kt-ext")
+                }
+            }
         }
     }
+}
+
+signing {
+    sign(publishing.publications)
 }
