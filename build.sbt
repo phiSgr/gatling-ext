@@ -1,10 +1,14 @@
+// the enterprisePackage task is confused
+ThisBuild / Gatling / publishArtifact := false
+ThisBuild / GatlingIt / publishArtifact := false
+
 val commonSettings = Seq(
   organization := "com.github.phisgr",
   scalaVersion := "2.13.8",
   crossPaths := false,
 )
 
-val gatlingVersion = "3.7.6"
+val gatlingVersion = "3.8.3"
 val gatlingCore = "io.gatling" % "gatling-core" % gatlingVersion
 
 val publishSettings = {
@@ -25,7 +29,7 @@ lazy val root = (project in file("."))
   .settings(publishSettings: _*)
   .settings(
     name := "gatling-ext",
-    version := "0.3.0",
+    version := "0.4.0",
     scalacOptions ++= Seq(
       "-language:existentials",
       "-language:implicitConversions",

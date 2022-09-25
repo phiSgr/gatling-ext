@@ -1,6 +1,5 @@
 package com.github.phisgr.gatling.generic
 
-import java.util.concurrent.{Executor, Executors}
 import com.github.phisgr.gatling.generic.action._
 import com.github.phisgr.gatling.generic.check.CodeCheckSupport
 import com.typesafe.scalalogging.StrictLogging
@@ -9,6 +8,7 @@ import io.gatling.core.action.builder.ActionBuilder
 import io.gatling.core.session.{Expression, Session}
 import io.gatling.core.structure.{ChainBuilder, StructureBuilder}
 
+import java.util.concurrent.{Executor, Executors}
 import scala.annotation.implicitAmbiguous
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, Future}
