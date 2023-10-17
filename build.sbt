@@ -4,15 +4,15 @@ ThisBuild / GatlingIt / publishArtifact := false
 
 val commonSettings = Seq(
   organization := "com.github.phisgr",
-  scalaVersion := "2.13.8",
+  scalaVersion := "2.13.12",
   crossPaths := false,
 )
 
-val gatlingVersion = "3.8.3"
+val gatlingVersion = "3.9.5"
 val gatlingCore = "io.gatling" % "gatling-core" % gatlingVersion
 
 val publishSettings = {
-  import xerial.sbt.Sonatype._
+  import xerial.sbt.Sonatype.*
   Seq(
     publishTo := SonatypeKeys.sonatypePublishTo.value,
     publishMavenStyle := true,
@@ -25,11 +25,11 @@ val publishSettings = {
 
 lazy val root = (project in file("."))
   .enablePlugins(GatlingPlugin)
-  .settings(commonSettings: _*)
-  .settings(publishSettings: _*)
+  .settings(commonSettings *)
+  .settings(publishSettings *)
   .settings(
     name := "gatling-ext",
-    version := "0.4.0",
+    version := "0.5.0",
     scalacOptions ++= Seq(
       "-language:existentials",
       "-language:implicitConversions",

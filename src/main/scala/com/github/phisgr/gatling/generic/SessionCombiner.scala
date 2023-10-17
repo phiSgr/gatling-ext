@@ -3,7 +3,6 @@ package com.github.phisgr.gatling.generic
 import com.typesafe.scalalogging.Logger
 import io.gatling.core.session.Session
 
-import scala.annotation.varargs
 import scala.util.control.NonFatal
 
 trait SessionCombiner {
@@ -27,7 +26,6 @@ trait SessionCombiner {
 object SessionCombiner {
   val NoOp: SessionCombiner = (main: Session, _: Session) => main
 
-  @varargs
   def pick(attributes: String*): SessionCombiner = (main: Session, branched: Session) => {
     attributes.foldLeft(main) { case (acc, key) =>
       branched.attributes.get(key) match {

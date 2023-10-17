@@ -1,7 +1,7 @@
 package computerdatabase
 
-import com.github.phisgr.gatling.generic.SessionCombiner
 import com.github.phisgr.gatling.kt.*
+import com.github.phisgr.gatling.kt.generic.SessionCombiner
 import io.gatling.javaapi.core.CoreDsl.*
 import io.gatling.javaapi.core.Simulation
 import java.util.*
@@ -32,7 +32,7 @@ class GenericSimulation : Simulation() {
                 )
             }
             +repeat(10, "i").on {
-                +await("sleeper#{i}", SessionCombiner.NoOp())
+                +await("sleeper#{i}", SessionCombiner.NO_OP)
             }
             +peek { session ->
                 val now = System.currentTimeMillis()

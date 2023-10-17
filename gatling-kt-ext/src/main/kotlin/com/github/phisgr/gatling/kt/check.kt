@@ -11,6 +11,7 @@ import io.gatling.javaapi.core.CheckBuilder
 /**
  * Checks the [Throwable.message] of the potential failure in generic code execution.
  */
+@get:JvmName("errorMessage")
 val errorMessage: CheckBuilder.Find<String?> =
     CheckBuilder.Find.Default(
         ResponseExtract.extract(Predef.errorMessage(), "response"),

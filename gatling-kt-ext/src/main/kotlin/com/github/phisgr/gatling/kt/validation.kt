@@ -1,3 +1,5 @@
+@file:JvmName("Validation")
+
 package com.github.phisgr.gatling.kt
 
 import com.github.phisgr.gatling.kt.internal.FailureThrowable

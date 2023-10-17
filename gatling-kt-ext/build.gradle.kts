@@ -4,7 +4,7 @@ plugins {
     kotlin("jvm") version "1.7.10"
     id("org.jetbrains.dokka") version "1.7.10"
 
-    id("io.gatling.gradle") version "3.8.3.2"
+    id("io.gatling.gradle") version "3.9.5.6"
 
     id("maven-publish")
     id("signing")
@@ -16,18 +16,18 @@ repositories {
 }
 
 dependencies {
-    api("com.github.phisgr:gatling-ext:0.4.0")
-    api("io.gatling:gatling-core-java:3.8.3")
+    api("com.github.phisgr:gatling-ext:0.5.0")
+    api("io.gatling:gatling-core-java:3.9.5")
 
     compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 
-    gatlingImplementation("com.github.phisgr:gatling-ext:0.4.0")
+    gatlingImplementation("com.github.phisgr:gatling-ext:0.5.0")
     gatlingImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 }
 
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
-        freeCompilerArgs = freeCompilerArgs + "-Xlambdas=indy"
+        freeCompilerArgs = freeCompilerArgs + "-Xlambdas=indy" + "-Xjvm-default=all"
     }
 }
 
@@ -55,7 +55,7 @@ publishing {
         create<MavenPublication>("maven") {
             groupId = "com.github.phisgr"
             artifactId = "gatling-kt-ext"
-            version = "0.4.0"
+            version = "0.5.0"
 
             from(components["java"])
 
